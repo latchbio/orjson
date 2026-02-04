@@ -1,5 +1,8 @@
 # orjson
 
+> [!CAUTION]
+> This fork of orjson removes build-time check for python3.14 free threading. orjson doesn't plan on supporting PEP703 until it is stable in python 3.15 scheduled release Oct 2026. Do not use to serialize datastructures that are concurrenly mutated.
+
 orjson is a fast, correct JSON library for Python. It
 [benchmarks](https://github.com/ijl/orjson?tab=readme-ov-file#performance) as the fastest Python
 library for JSON and is more correct than the standard json library or other

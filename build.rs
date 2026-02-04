@@ -4,9 +4,9 @@
 fn main() {
     let python_config = pyo3_build_config::get();
 
-    if python_config.is_free_threaded() && std::env::var("ORJSON_BUILD_FREETHREADED").is_err() {
-        not_supported("free-threaded Python")
-    }
+    // if python_config.is_free_threaded() && std::env::var("ORJSON_BUILD_FREETHREADED").is_err() {
+    //     not_supported("free-threaded Python")
+    // }
 
     #[allow(unused_variables)]
     let is_64_bit_python = matches!(python_config.pointer_width, Some(64));
