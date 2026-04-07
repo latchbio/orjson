@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
-// Copyright ijl (2024-2025)
+// Copyright ijl (2023-2026)
 
+use crate::serialize::writer::WriteExt;
 use bytes::{BufMut, buf::UninitSlice};
 use core::mem::MaybeUninit;
 
@@ -31,6 +32,12 @@ impl SmallFixedBuffer {
     pub fn len(&self) -> usize {
         self.idx
     }
+
+    #[allow(clippy::inherent_to_string)]
+    #[inline]
+    pub fn to_string(&self) -> String {
+        String::from(str_from_slice!(self.as_ptr(), self.len()))
+    }
 }
 
 unsafe impl BufMut for SmallFixedBuffer {
@@ -51,7 +58,7 @@ unsafe impl BufMut for SmallFixedBuffer {
 
     #[inline]
     fn put_u8(&mut self, value: u8) {
-        debug_assert!(self.remaining_mut() > 1);
+        debug_assert!(self.remaining_mut() > 8);
         unsafe {
             core::ptr::write((&raw mut self.bytes).cast::<u8>().add(self.idx), value);
             self.advance_mut(1);
@@ -69,5 +76,28 @@ unsafe impl BufMut for SmallFixedBuffer {
             );
             self.advance_mut(src.len());
         }
+    }
+}
+
+impl WriteExt for SmallFixedBuffer {
+    #[inline(always)]
+    fn as_mut_buffer_ptr(&mut self) -> *mut u8 {
+        unsafe { self.as_ptr().cast_mut().add(self.idx) }
+    }
+
+    fn reserve(&mut self, _len: usize) {
+        unimplemented!()
+    }
+
+    fn reserve_minimum(&mut self) {
+        unimplemented!()
+    }
+
+    fn put_bool(&mut self, _val: bool) {
+        unimplemented!()
+    }
+
+    fn put_null(&mut self) {
+        unimplemented!()
     }
 }
