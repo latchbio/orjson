@@ -31,7 +31,7 @@ pub(crate) use numpy::{
     NPY_ARRAY_C_CONTIGUOUS, NPY_ARRAY_NOTSWAPPED, NumpyBool, NumpyDateTimeError, NumpyDatetime64,
     NumpyDatetime64Repr, NumpyDatetimeUnit, NumpyFloat16, NumpyFloat32, NumpyFloat64, NumpyInt8,
     NumpyInt16, NumpyInt32, NumpyInt64, NumpyUint8, NumpyUint16, NumpyUint32, NumpyUint64,
-    PyArrayInterface, PyCapsule,
+    PyArrayInterface,
 };
 
 pub(crate) use compat::*;
@@ -71,8 +71,8 @@ pub(crate) use pyo3_ffi::{
     Py_TPFLAGS_UNICODE_SUBCLASS, Py_TYPE, Py_True, Py_XDECREF, Py_buffer, Py_hash_t, Py_intptr_t,
     Py_mod_exec, Py_ssize_t, Py_tp_dealloc, Py_tp_new, PyASCIIObject, PyBool_Type,
     PyBuffer_IsContiguous, PyByteArray_AsString, PyByteArray_Size, PyByteArray_Type,
-    PyBytes_FromStringAndSize, PyBytes_Type, PyCFunction_NewEx, PyCapsule_Import,
-    PyCompactUnicodeObject, PyDateTime_CAPI, PyDateTime_DATE_GET_HOUR,
+    PyBytes_FromStringAndSize, PyBytes_Type, PyCFunction_NewEx, PyCapsule_GetPointer,
+    PyCapsule_Import, PyCompactUnicodeObject, PyDateTime_CAPI, PyDateTime_DATE_GET_HOUR,
     PyDateTime_DATE_GET_MICROSECOND, PyDateTime_DATE_GET_MINUTE, PyDateTime_DATE_GET_SECOND,
     PyDateTime_DATE_GET_TZINFO, PyDateTime_DELTA_GET_DAYS, PyDateTime_DELTA_GET_SECONDS,
     PyDateTime_DateTime, PyDateTime_GET_DAY, PyDateTime_GET_MONTH, PyDateTime_GET_YEAR,

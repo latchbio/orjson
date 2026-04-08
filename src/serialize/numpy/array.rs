@@ -4,7 +4,7 @@
 use super::item::ItemType;
 use crate::ffi::{
     NPY_ARRAY_C_CONTIGUOUS, NPY_ARRAY_NOTSWAPPED, NumpyDatetimeUnit, Py_DECREF, PyArrayInterface,
-    PyCapsule, PyObject, PyObject_GetAttr,
+    PyCapsule_GetPointer, PyObject, PyObject_GetAttr,
 };
 use crate::opt::Opt;
 use crate::typeref::ARRAY_STRUCT_STR;
@@ -37,7 +37,7 @@ pub(crate) struct NumpyArray {
     position: Vec<isize>,
     pub children: Vec<NumpyArray>,
     pub depth: usize,
-    capsule: *mut PyCapsule,
+    capsule: *mut PyObject,
     pub kind: ItemType,
     pub opts: Opt,
 }
@@ -49,11 +49,8 @@ impl NumpyArray {
     pub fn new(ptr: *mut PyObject, opts: Opt) -> Result<Self, PyArrayError> {
         let capsule = unsafe { PyObject_GetAttr(ptr, ARRAY_STRUCT_STR) };
         debug_assert!(!capsule.is_null());
-        let array = unsafe {
-            (*capsule.cast::<PyCapsule>())
-                .pointer
-                .cast::<PyArrayInterface>()
-        };
+        let array =
+            unsafe { PyCapsule_GetPointer(capsule, core::ptr::null()).cast::<PyArrayInterface>() };
         debug_assert!(!array.is_null());
         if unsafe { (*array).two != 2 } {
             unsafe {
@@ -98,7 +95,7 @@ impl NumpyArray {
                         position: vec![0; num_dimensions],
                         children: Vec::with_capacity(num_dimensions),
                         depth: 0,
-                        capsule: capsule.cast::<PyCapsule>(),
+                        capsule: capsule,
                         kind: kind,
                         opts: opts,
                     };
@@ -178,8 +175,7 @@ impl Drop for NumpyArray {
     fn drop(&mut self) {
         if self.depth == 0 {
             unsafe {
-                Py_DECREF(self.array.cast::<PyObject>());
-                Py_DECREF(self.capsule.cast::<PyObject>());
+                Py_DECREF(self.capsule);
             };
         }
     }
